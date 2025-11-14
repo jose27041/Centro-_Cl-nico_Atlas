@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Panel Clinico Atlas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="top-bar">
+        <div class="container nav-grid">
+            <div class="brand-block">
+                <div class="brand-mark">JJ</div>
+                <div>
+                    <h1>Centro Clinico Atlas</h1>
+                    <p class="subtitle">Panel para explorar predicciones y evaluar modelos medicos.</p>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="#batch-lab">Analisis por lotes</a>
+                <a href="#single-lab">Caso individual</a>
+                <a href="#intel">Resumen de modelos</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero-panel">
+            <div class="hero-frame">
+                <div class="hero-header">
+                    <span class="hero-pill">Version 2025</span>
+                    <p>Panel clinico actualizado para decisiones rapidas y seguimiento continuo.</p>
+                </div>
+                <div class="hero-main-grid">
+                    <div class="hero-narrative">
+                        <h2>Monitoreo y toma de decisiones clinicas en un solo lugar.</h2>
+                        <p>
+                            Revisa el desempeno de tus modelos, sube conjuntos de datos,
+                            y consulta casos puntuales con trazabilidad completa.
+                        </p>
+                        <ul class="hero-checklist">
+                            <li>
+                                <span class="hero-step">01</span>
+                                <div>
+                                    <h4>Formularios dinamicos</h4>
+                                    <p>Sincronizados con el pipeline entrenado para asegurar consistencia.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="hero-step">02</span>
+                                <div>
+                                    <h4>Metricas listas</h4>
+                                    <p>Matrices de confusion y KPI clave listos para compartir.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="hero-step">03</span>
+                                <div>
+                                    <h4>Historial documentado</h4>
+                                    <p>Dataset de entrenamiento descrito para respaldar la sustentacion.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="hero-dashboard" role="status">
+                        <div class="hero-stat-grid">
+                            <article class="hero-stat-card">
+                                <p class="hero-stat-label">Clases activas</p>
+                                <div class="hero-stat-value">
+                                    <span id="hero-class-count">0</span>
+                                    <small class="stat-detail">Diagnostico: -</small>
+                                </div>
+                                <p class="hero-stat-note">Sincronizadas con el ultimo entrenamiento.</p>
+                            </article>
+                            <article class="hero-stat-card">
+                                <p class="hero-stat-label">Variables de entrada</p>
+                                <div class="hero-stat-value">
+                                    <span id="hero-feature-count">0</span>
+                                    <small class="stat-detail">Orden exacto segun el pipeline</small>
+                                </div>
+                                <p class="hero-stat-note">Confirmadas contra el dataset operativo.</p>
+                            </article>
+                        </div>
+                        <div class="hero-chip-tray">
+                            <div class="hero-chip">
+                                <strong>Casos puntuales</strong>
+                                <p>Terminal individual con probabilidades e interpretabilidad.</p>
+                            </div>
+                            <div class="hero-chip">
+                                <strong>Analisis por lotes</strong>
+                                <p>Sube archivos .csv o .xlsx para auditar desempenos.</p>
+                            </div>
+                            <div class="hero-chip">
+                                <strong>Dataset guia</strong>
+                                <p>Consulta notas descriptivas y clases activas.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="tabbed-panel" id="analysis-tabs">
+            <div class="tab-controls" role="tablist" aria-label="Modos de analisis">
+                <button type="button" id="tab-button-batch" class="tab-button active" data-tab-target="batch" role="tab" aria-selected="true" aria-controls="tab-batch">
+                    Evaluacion de lotes
+                </button>
+                <button type="button" id="tab-button-individual" class="tab-button" data-tab-target="individual" role="tab" aria-selected="false" aria-controls="tab-individual">
+                    Terminal individual
+                </button>
+            </div>
+            <div class="tab-views">
+                <div class="tab-view active" id="tab-batch" data-tab-content="batch" role="tabpanel" aria-labelledby="tab-button-batch">
+                    <div class="module-card" id="batch-lab">
+                        <header>
+                            <div class="module-heading">
+                                <span class="tag">Modo lote</span>
+                                <h2>Evaluacion de lotes</h2>
+                            </div>
+                            <p>
+                                Sube archivos <code>.csv</code> o <code>.xlsx</code> con la columna objetivo
+                                <code>diagnosis</code> para generar metricas de balance y matriz de confusion.
+                            </p>
+                        </header>
+                        <div class="module-body">
+                            <div class="module-form">
+                                <form id="batch-form" class="form-grid" enctype="multipart/form-data">
+                                    <div class="form-row">
+                                        <label for="batch-model">Modelo</label>
+                                        <select id="batch-model" name="model" required></select>
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="batch-file">Archivo de evaluacion</label>
+                                        <input type="file" id="batch-file" name="file" accept=".csv,.xlsx,.xls" required>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="submit" class="primary-btn">Calcular lote</button>
+                                        <span id="batch-status" class="status-msg"></span>
+                                    </div>
+                                </form>
+                            </div>
+                            <div id="batch-result" class="result-panel hidden" aria-live="polite">
+                                <div class="metrics-grid" id="batch-metrics"></div>
+                                <div class="confusion-wrapper">
+                                    <h3>Matriz de confusion</h3>
+                                    <img id="confusion-image" alt="Matriz de confusion" />
+                                    <table id="confusion-table"></table>
+                                </div>
+                                <div>
+                                    <h3>Vista previa de registros</h3>
+                                    <div class="table-scroll">
+                                        <table id="batch-preview"></table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-view" id="tab-individual" data-tab-content="individual" role="tabpanel" aria-labelledby="tab-button-individual" hidden>
+                    <div class="module-card" id="single-lab">
+                        <header>
+                            <div class="module-heading">
+                                <span class="tag tag-secondary">Modo puntual</span>
+                                <h2>Terminal individual</h2>
+                            </div>
+                            <p>
+                                Introduce los valores numericos de cada variable y recibe la prediccion con sus probabilidades asociadas.
+                            </p>
+                        </header>
+                        <div class="module-body">
+                            <form id="individual-form" class="form-grid">
+                                <div class="form-row">
+                                    <label for="individual-model">Modelo</label>
+                                    <select id="individual-model" name="model" required></select>
+                                </div>
+                                <div id="feature-inputs" class="feature-grid"></div>
+                                <div class="form-actions">
+                                    <button type="submit" class="secondary-btn">Calcular caso</button>
+                                    <span id="individual-status" class="status-msg"></span>
+                                </div>
+                            </form>
+                            <div id="individual-result" class="result-panel hidden" aria-live="polite"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="intel-card" id="intel">
+            <header>
+                <h2>Resumen del entrenamiento</h2>
+                <p>Consulta el dataset de referencia, clases activas y notas que respaldan la sustentacion.</p>
+            </header>
+            <div id="reference-content" class="metrics-grid"></div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <div class="container">
+            <small>Proyecto final elaborado por Jose y Jhon. Uso interno para sustentacion academica.</small>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</body>
+</html>
